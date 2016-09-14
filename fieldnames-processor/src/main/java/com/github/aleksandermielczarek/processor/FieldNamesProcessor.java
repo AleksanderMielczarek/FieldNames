@@ -8,7 +8,11 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -21,6 +25,8 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 
 /**
@@ -40,12 +46,27 @@ public class FieldNamesProcessor extends AbstractProcessor {
                     PackageElement packageElement = (PackageElement) typeElement.getEnclosingElement();
                     TypeSpec.Builder fieldNamesBuilder = TypeSpec.interfaceBuilder(typeElement.getSimpleName() + "FieldNames")
                             .addModifiers(Modifier.PUBLIC);
-                    typeElement.getEnclosedElements().stream()
+
+                    TypeMirror superMirror = typeElement.getSuperclass();
+                    List<TypeElement> typeElements = new ArrayList<>();
+                    typeElements.add(typeElement);
+                    while (!superMirror.getKind().equals(TypeKind.NONE)) {
+                        TypeElement superTypeElement = processingEnv.getElementUtils().getTypeElement(superMirror.toString());
+                        superMirror = superTypeElement.getSuperclass();
+                        typeElements.add(superTypeElement);
+                    }
+
+                    Set<String> fields = typeElements.stream()
+                            .map(TypeElement::getEnclosedElements)
+                            .flatMap(Collection::stream)
                             .filter(element -> element.getKind().equals(ElementKind.FIELD))
                             .filter(element -> !element.getModifiers().contains(Modifier.STATIC))
                             .map(element -> (VariableElement) element)
                             .map(VariableElement::getSimpleName)
                             .map(CharSequence::toString)
+                            .collect(Collectors.toSet());
+
+                    fields.stream()
                             .map(name -> FieldSpec.builder(String.class, "FIELD_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name))
                                     .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
                                     .initializer("$S", name))

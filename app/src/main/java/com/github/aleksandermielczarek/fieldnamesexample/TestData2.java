@@ -8,6 +8,7 @@ import com.github.aleksandermielczarek.FieldNames;
 @FieldNames
 public class TestData2 extends TestData {
 
+    private String testData;
     private String testData3;
 
     public String getTestData3() {
@@ -16,5 +17,15 @@ public class TestData2 extends TestData {
 
     public void setTestData3(String testData3) {
         this.testData3 = testData3;
+    }
+
+    @Override
+    public String getTestData() {
+        return testData;
+    }
+
+    @Override
+    public void setTestData(String testData) {
+        this.testData = testData;
     }
 }
