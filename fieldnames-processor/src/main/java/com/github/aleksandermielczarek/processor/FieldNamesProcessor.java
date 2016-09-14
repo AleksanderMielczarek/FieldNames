@@ -42,6 +42,7 @@ public class FieldNamesProcessor extends AbstractProcessor {
                             .addModifiers(Modifier.PUBLIC);
                     typeElement.getEnclosedElements().stream()
                             .filter(element -> element.getKind().equals(ElementKind.FIELD))
+                            .filter(element -> !element.getModifiers().contains(Modifier.STATIC))
                             .map(element -> (VariableElement) element)
                             .map(VariableElement::getSimpleName)
                             .map(CharSequence::toString)

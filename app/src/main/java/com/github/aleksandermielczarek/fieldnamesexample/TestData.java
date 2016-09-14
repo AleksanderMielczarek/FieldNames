@@ -8,6 +8,8 @@ import com.github.aleksandermielczarek.FieldNames;
 @FieldNames
 public class TestData {
 
+    public static final String TEST = "test";
+
     private String testData;
     private String testData2;
 
