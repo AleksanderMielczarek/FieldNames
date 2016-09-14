@@ -59,9 +59,9 @@ Following class will be generated:
 
 ```java
 public interface PersonFieldNames {
-  String FIELD_NAME = "name";
 
-  String FIELD_SURNAME = "surname";
+    String FIELD_NAME = "name";
+    String FIELD_SURNAME = "surname";
 }
 ```
 
