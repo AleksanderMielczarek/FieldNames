@@ -1,4 +1,4 @@
-package com.github.aleksandermielczarek;
+package com.github.aleksandermielczarek.fieldnames;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

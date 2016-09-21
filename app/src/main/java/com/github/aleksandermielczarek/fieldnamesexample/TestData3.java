@@ -1,6 +1,6 @@
 package com.github.aleksandermielczarek.fieldnamesexample;
 
-import com.github.aleksandermielczarek.FieldNames;
+import com.github.aleksandermielczarek.fieldnames.FieldNames;
 import com.google.auto.value.AutoValue;
 
 /**

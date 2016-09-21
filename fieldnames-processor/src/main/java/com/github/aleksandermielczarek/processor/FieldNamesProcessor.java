@@ -1,6 +1,6 @@
 package com.github.aleksandermielczarek.processor;
 
-import com.github.aleksandermielczarek.FieldNames;
+import com.github.aleksandermielczarek.fieldnames.FieldNames;
 import com.google.auto.service.AutoService;
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.FieldSpec;
@@ -34,7 +34,7 @@ import javax.tools.Diagnostic;
  * Created by Aleksander Mielczarek on 13.09.2016.
  */
 @AutoService(Processor.class)
-@SupportedAnnotationTypes("com.github.aleksandermielczarek.FieldNames")
+@SupportedAnnotationTypes("com.github.aleksandermielczarek.fieldnames.FieldNames")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class FieldNamesProcessor extends AbstractProcessor {
 
