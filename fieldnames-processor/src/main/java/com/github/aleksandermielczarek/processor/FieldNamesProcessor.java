@@ -21,6 +21,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -53,7 +54,9 @@ public class FieldNamesProcessor extends AbstractProcessor {
                     while (!superMirror.getKind().equals(TypeKind.NONE)) {
                         TypeElement superTypeElement = processingEnv.getElementUtils().getTypeElement(superMirror.toString());
                         superMirror = superTypeElement.getSuperclass();
-                        typeElements.add(superTypeElement);
+                        if (!superMirror.getKind().equals(TypeKind.NONE)) {
+                            typeElements.add(superTypeElement);
+                        }
                     }
 
                     Set<String> fields = typeElements.stream()
@@ -65,6 +68,19 @@ public class FieldNamesProcessor extends AbstractProcessor {
                             .map(VariableElement::getSimpleName)
                             .map(CharSequence::toString)
                             .collect(Collectors.toSet());
+
+                    typeElements.stream()
+                            .map(TypeElement::getEnclosedElements)
+                            .flatMap(Collection::stream)
+                            .filter(element -> element.getKind().equals(ElementKind.METHOD))
+                            .filter(element -> !element.getModifiers().contains(Modifier.STATIC))
+                            .map(element -> (ExecutableElement) element)
+                            .map(ExecutableElement::getSimpleName)
+                            .map(CharSequence::toString)
+                            .filter(name -> name.startsWith("get"))
+                            .map(name -> name.substring(3, name.length()))
+                            .map(name -> CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name))
+                            .forEach(fields::add);
 
                     fields.stream()
                             .map(name -> FieldSpec.builder(String.class, "FIELD_" + CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name))
