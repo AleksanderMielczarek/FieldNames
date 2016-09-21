@@ -88,6 +88,7 @@ public interface UserFieldNames {
 ### 0.2.0 (2016-09-21)
 
 - generate fields from getters
+- fix package name
 
 ## License
 
