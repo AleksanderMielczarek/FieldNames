@@ -35,8 +35,8 @@ apply plugin: 'android-apt'
 
 dependencies {
     ...
-    compile 'com.github.AleksanderMielczarek.FieldNames:fieldnames:0.1.0'
-    apt 'com.github.AleksanderMielczarek.FieldNames:fieldnames-processor:0.1.0'
+    compile 'com.github.AleksanderMielczarek.FieldNames:fieldnames:0.2.0'
+    apt 'com.github.AleksanderMielczarek.FieldNames:fieldnames-processor:0.2.0'
 }
 ```
 
@@ -64,6 +64,30 @@ public interface PersonFieldNames {
     String FIELD_SURNAME = "surname";
 }
 ```
+
+Library supports [AutoValue](https://github.com/google/auto/tree/master/value):
+
+```java
+@FieldNames
+@AutoValue
+public abstract class User {
+
+    public abstract String getName();
+}
+```
+
+```java
+public interface UserFieldNames {
+
+    String FIELD_NAME = "name";
+}
+```
+
+## Changelog
+
+### 0.2.0 (2016-09-21)
+
+- generate fields from getters
 
 ## License
 
